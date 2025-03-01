@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,122 @@
     <title>Voice to Sign Language Converter</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Your existing CSS styles remain unchanged */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f9faff, #e3f2fd);
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a90e2, #7fb3ff);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 4em;
+            margin: 0 0 10px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.4em;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        .description {
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .btn-start, .btn-clear, .btn-play, .btn-about, .btn-contact {
+            background: linear-gradient(to right, #ff6b6b, #ff3d3d);
+            color: white;
+            padding: 15px 50px;
+            font-size: 1.3em;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+            margin: 10px;
+        }
+
+        .btn-start:hover, .btn-clear:hover, .btn-play:hover, .btn-about:hover, .btn-contact:hover {
+            background: linear-gradient(to right, #ff3d3d, #ff1a1a);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 108, 108, 0.6);
+        }
+
+        #transcription {
+            margin-top: 30px;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #444;
+            padding: 20px;
+            border: 2px solid #ddd;
+            background-color: #f8f9fa;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 60px;
+            border-radius: 15px;
+            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #sign-language-video {
+            display: none;
+            margin-top: 30px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            font-size: 0.9em;
+            box-shadow: 0 -6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer p a {
+            color: #4a90e2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer p a:hover {
+            color: #7fb3ff;
+        }
     </style>
 </head>
 <body>
@@ -57,32 +173,6 @@
 <script>
     let recognition;
     let isListening = false;
-    let videoFileIds = {}; // To store video file IDs fetched from Google Drive
-
-    // Google Drive API configuration
-    const FOLDER_ID = "1NdFVziqxvOc4_6bhoNKEv9g5HFp1F-FF"; // Your Google Drive folder ID
-    const API_KEY = "297c6a140ca3d9dcc71c410fcb2e1386fc398fbe"; // Replace with your Google API key
-
-    // Fetch files from Google Drive folder
-    async function fetchDriveFiles() {
-        const url = `https://www.googleapis.com/drive/v3/files?q='$1NdFVziqxvOc4_6bhoNKEv9g5HFp1F-FF'+in+parents&key=${API_KEY}`;
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.files) {
-                data.files.forEach(file => {
-                    const fileName = file.name.replace(".mp4", "").toLowerCase().replace(/\s+/g, '_');
-                    videoFileIds[fileName] = file.id; // Map file name to file ID
-                });
-                console.log("Fetched video file IDs:", videoFileIds);
-            }
-        } catch (error) {
-            console.error("Error fetching files from Google Drive:", error);
-        }
-    }
-
-    // Initialize Google Drive API
-    fetchDriveFiles();
 
     // Check if Speech Recognition API is available
     if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
@@ -135,16 +225,9 @@
     // Function to set the video source based on the transcription
     function setVideoSource(transcription) {
         const videoSource = document.getElementById("video-source");
-        const videoFile = getDriveLink(transcription.toLowerCase().replace(/\s+/g, '_'));
+        const videoFile = `videos/${transcription.toLowerCase().replace(/\s+/g, '_')}.mp4`;
         videoSource.src = videoFile;
         document.getElementById("sign-language-video").load();
-    }
-
-    // Function to generate Google Drive link based on video name
-    function getDriveLink(videoName) {
-        const baseUrl = "https://drive.google.com/uc?export=download&id=";
-        const fileId = videoFileIds[videoName]; // Get file ID from the fetched data
-        return fileId ? baseUrl + fileId : ""; // Return the full Google Drive link
     }
 
     // Function to clear the transcription
@@ -165,4 +248,255 @@
 </script>
 
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Voice to Sign Language Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f9faff, #e3f2fd);
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a90e2, #7fb3ff);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 4em;
+            margin: 0 0 10px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.4em;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        .description {
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .btn-start, .btn-clear, .btn-play, .btn-about, .btn-contact {
+            background: linear-gradient(to right, #ff6b6b, #ff3d3d);
+            color: white;
+            padding: 15px 50px;
+            font-size: 1.3em;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+            margin: 10px;
+        }
+
+        .btn-start:hover, .btn-clear:hover, .btn-play:hover, .btn-about:hover, .btn-contact:hover {
+            background: linear-gradient(to right, #ff3d3d, #ff1a1a);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 108, 108, 0.6);
+        }
+
+        #transcription {
+            margin-top: 30px;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #444;
+            padding: 20px;
+            border: 2px solid #ddd;
+            background-color: #f8f9fa;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 60px;
+            border-radius: 15px;
+            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #sign-language-video {
+            display: none;
+            margin-top: 30px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            font-size: 0.9em;
+            box-shadow: 0 -6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer p a {
+            color: #4a90e2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer p a:hover {
+            color: #7fb3ff;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Voice to Sign Language Converter</h1>
+    <p>Bridging communication gaps with technology</p>
+    <button class="btn-about" onclick="location.href='#about'">About Us</button>
+    <button class="btn-contact" onclick="location.href='#contact'">Contact Us</button>
+</header>
+
+<div class="container">
+    <div class="description">
+        <p>Our tool leverages advanced speech recognition to convert spoken words into sign language. Designed to empower individuals with hearing impairments, this tool fosters real-time communication and inclusivity.</p>
+    </div>
+    
+    <button class="btn-start" id="start-btn" onclick="toggleSpeechRecognition()">Start Listening</button>
+    <button class="btn-clear" id="clear-btn" onclick="clearTranscription()">Clear Transcription</button>
+    <button class="btn-play" id="play-btn" onclick="playVideo()">Play Video</button>
+
+    <div id="transcription">
+        <!-- The transcribed speech will appear here -->
+        Say something to see the transcription.
+    </div>
+
+    <!-- Video player for sign language videos -->
+    <video id="sign-language-video" width="600" controls loop>
+        <source id="video-source" src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<!-- About Us Section -->
+<div id="about" class="container">
+    <h2>About Us</h2>
+    <p>We are dedicated to bridging communication gaps with technology. Our team is passionate about creating tools that empower individuals with hearing impairments and foster real-time communication and inclusivity.</p>
+</div>
+
+<!-- Contact Us Section -->
+<div id="contact" class="container">
+    <h2>Contact Us</h2>
+    <p>If you have any questions or feedback, please feel free to reach out to us at:</p>
+    <p>Email: priyanshu.jaiswal24@vit.edu</p>
+    <p>Phone: 7030824727</p>
+</div>
+
+<script>
+    let recognition;
+    let isListening = false;
+
+    // Check if Speech Recognition API is available
+    if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
+        alert("Speech Recognition API is not supported in this browser.");
+    } else {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US'; // Set language
+        recognition.interimResults = true; // Show interim results
+        recognition.maxAlternatives = 1; // Only one alternative
+    }
+
+    // Toggle Speech Recognition
+    function toggleSpeechRecognition() {
+        if (isListening) {
+            recognition.stop();
+            document.getElementById("start-btn").textContent = "Start Listening";
+        } else {
+            recognition.start();
+            document.getElementById("start-btn").textContent = "Stop Listening";
+        }
+        isListening = !isListening;
+    }
+
+    // On speech result
+    recognition.onresult = function(event) {
+        let transcription = event.results[event.resultIndex][0].transcript;
+        document.getElementById("transcription").textContent = transcription;
+
+        // Set the video source based on the transcription
+        setVideoSource(transcription);
+    };
+
+    // On error
+    recognition.onerror = function(event) {
+        console.error("Speech recognition error", event.error);
+    };
+
+    // On start
+    recognition.onstart = function() {
+        console.log("Speech recognition started.");
+    };
+
+    // On end
+    recognition.onend = function() {
+        console.log("Speech recognition stopped.");
+        document.getElementById("start-btn").textContent = "Start Listening";
+        isListening = false;
+    };
+
+    // Function to set the video source based on the transcription
+    function setVideoSource(transcription) {
+        const videoSource = document.getElementById("video-source");
+        const videoFile = `videos/${transcription.toLowerCase().replace(/\s+/g, '_')}.mp4`;
+        videoSource.src = videoFile;
+        document.getElementById("sign-language-video").load();
+    }
+
+    // Function to clear the transcription
+    function clearTranscription() {
+        document.getElementById("transcription").textContent = "Say something to see the transcription.";
+        const videoPlayer = document.getElementById("sign-language-video");
+        videoPlayer.pause();
+        videoPlayer.currentTime = 0;
+        videoPlayer.style.display = "none";
+    }
+
+    // Function to play the video
+    function playVideo() {
+        const videoPlayer = document.getElementById("sign-language-video");
+        videoPlayer.style.display = "block";
+        videoPlayer.play();
+    }
+</script>
+
+</body>
+>>>>>>> aac1baf (Added large video files with Git LFS)
 </html>
