@@ -224,7 +224,7 @@
     // Function to set the video source based on the transcription
     function setVideoSource(transcription) {
         const videoSource = document.getElementById("video-source");
-        const videoFile = `videos/${transcription.toLowerCase().replace(/\s+/g, '_')}.mp4`;
+        const videoFile = `./videos/${transcription.toLowerCase().replace(/\s+/g, '_')}.mp4`;
         videoSource.src = videoFile;
         document.getElementById("sign-language-video").load();
     }
